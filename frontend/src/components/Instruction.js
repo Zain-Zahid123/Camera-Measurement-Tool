@@ -47,9 +47,9 @@ const steps = [
   },
   {
     icon: <SelectIcon />,
-    title: "Select Fabric Area",
-    description: "Use our intuitive drag tool to precisely select the fabric area you want to measure. The more accurate your selection, the better the results.",
-    extendedDescription: "Click and drag to create a boundary around your fabric. Use the corner handles to refine your selection. Double-click to auto-detect fabric edges using our AI algorithm. You can also use the 'Magic Wand' tool for fabrics with distinct patterns or colors.",
+    title: "AR Ruler Measurement",
+    description: "Use your smartphone’s camera and AR technology to measure fabric dimensions in real-time without manual selection.",
+    extendedDescription: "Simply point your camera at the fabric and align the virtual ruler with its edges. Our system will auto-detect and trace the dimensions. Tap the start and end points on the screen to mark edges. Move your device slowly for better accuracy. Ideal for on-the-go measurements or when manual selection isn't feasible.",
     tooltip: "Supports rectangular, polygonal, and freehand selections"
   },
   {
@@ -71,22 +71,10 @@ const steps = [
 function Instructions() {
   const observerRef = useRef(null);
   const elementsRef = useRef([]);
-  const [activeStep, setActiveStep] = useState(0);
   const [expandedSteps, setExpandedSteps] = useState({});
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [demoActive, setDemoActive] = useState(false);
-
-  useEffect(() => {
-    // Auto rotate through steps every 5 seconds if not in interactive mode
-    const interval = setInterval(() => {
-      if (!Object.keys(expandedSteps).length && !demoActive) {
-        setActiveStep((prev) => (prev + 1) % steps.length);
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [expandedSteps, demoActive]);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     // Initialize animation observer
@@ -128,61 +116,71 @@ function Instructions() {
   // Handle measuring process
   const handleStartMeasuring = () => {
     setLoading(true);
+    
+    // Simulate upload progress
+    const progressInterval = setInterval(() => {
+      setUploadProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 200);
+    
     // Simulate processing, replace with actual functionality
     setTimeout(() => {
+      clearInterval(progressInterval);
       setLoading(false);
+      setUploadProgress(0);
       // You could navigate to another page or show a success message here
-    }, 2000);
+      alert("Please wait while we take you to the next page…");
+    }, 2500);
   };
 
   // Toggle expanded content for a step
   const toggleExpanded = (index) => {
-    setExpandedSteps({
-      ...expandedSteps,
-      [index]: !expandedSteps[index]
+    setExpandedSteps(prev => {
+      const newState = { ...prev };
+      
+      // Close any other expanded steps
+      Object.keys(newState).forEach(key => {
+        if (Number(key) !== index) newState[key] = false;
+      });
+      
+      // Toggle the clicked step
+      newState[index] = !newState[index];
+      return newState;
     });
-  };
-
-  // Determine if a step should be highlighted based on activeStep
-  const isHighlighted = (index, originalHighlight) => {
-    if (demoActive) {
-      return index === activeStep;
-    }
-    return originalHighlight;
   };
 
   return (
     <div className="instructions-container">
-      <div className="section-subtitle animate-on-scroll">HOW IT WORKS</div>
-      <h1 className="main-title animate-on-scroll">Accurate Fabric Measurement</h1>
-      
-      <div className="sub-heading animate-on-scroll">
-        Transform your fabric measuring experience with our easy-to-use digital tool.
-        Our advanced technology ensures precise measurements every time, saving you time and reducing material waste.
+      <div className="hero-section">
+        <h1 className="main-title animate-on-scroll">Accurate Fabric Measurement</h1>
+
+        {/* How it works center mein laane ke liye wrap karo */}
+        <div className="subtitle-wrapper animate-on-scroll">
+        <div className="section-subtitle">HOW IT WORKS</div>
       </div>
-      
-      {/* Progress tracker */}
-      <div className="progress-tracker stagger-animation">
-        {steps.map((_, index) => (
-          <div 
-            key={index} 
-            className={`progress-dot ${index === activeStep ? 'active' : ''}`}
-            onClick={() => setActiveStep(index)}
-          />
-        ))}
+        <div className="sub-heading animate-on-scroll">
+          Transform your fabric measuring experience with our easy-to-use digital tool.
+          Our advanced technology ensures precise measurements every time, saving you time and reducing material waste.
+        </div>
       </div>
-      
       <div className="steps-container">
         {steps.map((step, index) => (
           <div 
             key={index} 
-            className={`step-card stagger-animation ${isHighlighted(index, step.highlight) ? 'highlight' : ''}`}
+            className={`step-card stagger-animation ${step.highlight ? 'highlight' : ''}`}
             style={{ animationDelay: `${index * 0.2}s` }}
             onMouseEnter={() => setActiveTooltip(index)}
             onMouseLeave={() => setActiveTooltip(null)}
             onClick={() => !expandedSteps[index] && toggleExpanded(index)}
             tabIndex={0}
             onKeyPress={(e) => e.key === 'Enter' && toggleExpanded(index)}
+            aria-expanded={expandedSteps[index]}
+            role="button"
           >
             <div className="step-icon">
               {step.icon}
@@ -199,7 +197,7 @@ function Instructions() {
             
             {/* Tooltip on hover */}
             {activeTooltip === index && step.tooltip && (
-              <div className="step-tooltip">
+              <div className="step-tooltip" role="tooltip">
                 {step.tooltip}
               </div>
             )}
@@ -212,6 +210,8 @@ function Instructions() {
               }}
               onKeyPress={(e) => e.key === 'Enter' && toggleExpanded(index)}
               tabIndex={0}
+              role="button"
+              aria-label={expandedSteps[index] ? "Show less" : "Read more"}
             >
               {expandedSteps[index] ? "SHOW LESS" : "READ MORE"}
             </div>
@@ -229,25 +229,11 @@ function Instructions() {
           {loading ? (
             <>
               <span className="loading-spinner"></span>
-              Processing...
+              { "Processing..."}
             </>
-          ) : "Start Measuring"}
-        </button>
-        
-        <button 
-          className="demo-btn stagger-animation"
-          onClick={() => setDemoActive(!demoActive)}
-        >
-          {demoActive ? "Exit Demo" : "Try Demo"}
+          ) : "Get Started"}
         </button>
       </div>
-      
-      {/* Demo mode instructions - show only when demo is active */}
-      {demoActive && (
-        <div className="demo-instructions stagger-animation" style={{ marginTop: '30px', color: '#3b82f6' }}>
-          <p>Demo Mode Active: Click through the steps above to see the measurement process</p>
-        </div>
-      )}
     </div>
   );
 }

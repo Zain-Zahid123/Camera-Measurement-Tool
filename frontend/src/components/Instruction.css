@@ -24,80 +24,130 @@ body {
   width: 100%;
   max-width: 1200px;
   padding: 60px 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   text-align: center;
   overflow: hidden;
+  position: relative;
+}
+
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px; /* sab ke darmiyan equal spacing */
+  margin-bottom: 60px;
+  padding-bottom: 30px;
+  position: relative;
+}
+
+.hero-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(59,130,246,0.3) 0%, rgba(59,130,246,1) 50%, rgba(59,130,246,0.3) 100%);
+  border-radius: 3px;
+}
+
+/* Subtitle wrapper to force center */
+.subtitle-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .section-subtitle {
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   color: #3b82f6;
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 10px;
   font-family: 'Montserrat', sans-serif;
+  position: relative;
+  display: inline-block;
+  /* remove margin-bottom and margin-top */
+  margin: 0;
+}
+
+.section-subtitle::before,
+.section-subtitle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 30px;
+  height: 1px;
+  background-color: rgba(59, 130, 246, 0.3);
+}
+
+.section-subtitle::before {
+  right: -40px;
+}
+
+.section-subtitle::after {
+  left: -40px;
 }
 
 .main-title {
   font-size: 38px;
   font-weight: 700;
   color: #1e293b;
-  margin-bottom: 20px;
   font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  /* remove margin-bottom: 10px; */
+  margin: 0;
 }
 
 .sub-heading {
   font-size: 16px;
   color: #64748b;
-  margin-bottom: 50px;
   line-height: 1.7;
   max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Progress Tracker */
-.progress-tracker {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
-  gap: 10px;
-}
-
-.progress-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #e2e8f0;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.progress-dot.active {
-  background-color: #3b82f6;
-  transform: scale(1.2);
-}
-
-.progress-dot:hover {
-  transform: scale(1.2);
-  background-color: #93c5fd;
+  margin: 0 auto; /* center and remove top/bottom spacing */
 }
 
 .steps-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 25px;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
+  position: relative;
+}
+
+/* Connecting line between step cards */
+.steps-container::before {
+  content: '';
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+  transform: translateX(-50%);
+  z-index: 0;
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  .steps-container::before {
+    display: block;
+  }
 }
 
 .step-card {
   position: relative;
   background: #ffffff;
-  padding: 30px 25px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 40px 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   text-align: center;
   transition: all 0.4s ease;
   overflow: hidden;
@@ -106,11 +156,40 @@ body {
   flex-direction: column;
   align-items: center;
   border: 1px solid #e2e8f0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.step-number {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #3b82f6;
+  color: white;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 18px;
+  border: 4px solid white;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+  z-index: 2;
 }
 
 .step-card.highlight {
-  background: #3b82f6;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
+  transform: translateY(-5px) scale(1.02);
+}
+
+.step-card.highlight .step-number {
+  background: white;
+  color: #3b82f6;
+  border: 4px solid #bfdbfe;
 }
 
 .step-card.highlight .step-title,
@@ -136,7 +215,7 @@ body {
 
 .step-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .step-card:focus-within {
@@ -150,8 +229,8 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 3px;
-  background: #3b82f6;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
   transform: scaleX(0);
   transition: transform 0.4s ease;
   transform-origin: right;
@@ -169,8 +248,8 @@ body {
 }
 
 .step-icon {
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   background: #f1f5f9;
   border-radius: 50%;
   display: flex;
@@ -178,10 +257,11 @@ body {
   justify-content: center;
   margin: 0 auto 20px;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .step-card:hover .step-icon {
-  transform: scale(1.1);
+  transform: scale(1.1) rotate(5deg);
 }
 
 .step-title {
@@ -226,10 +306,11 @@ body {
   border-radius: 6px;
   font-size: 12px;
   z-index: 10;
-  width: 200px;
+  width: 220px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   pointer-events: none;
   animation: fadeIn 0.3s ease;
+  margin-bottom: 10px;
 }
 
 .step-tooltip::after {
@@ -263,18 +344,21 @@ body {
   color: white;
 }
 
+.read-more:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
 .button-group {
   display: flex;
   justify-content: center;
-  gap: 15px;
   margin-top: 20px;
-  flex-wrap: wrap;
 }
 
-.measure-btn, .demo-btn {
-  background-color: #3b82f6;
+.measure-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #fff;
-  padding: 14px 40px;
+  padding: 16px 50px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -286,44 +370,44 @@ body {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
-.measure-btn::before, .demo-btn::before {
+.measure-btn::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
+  left: -100%;
   width: 100%;
   height: 100%;
-  background: #2563eb;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
   z-index: -1;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.4s ease;
 }
 
-.measure-btn:hover::before, .demo-btn:hover::before {
-  transform: scaleX(1);
-  transform-origin: left;
+.measure-btn:hover::before {
+  left: 100%;
 }
 
-.measure-btn:focus, .demo-btn:focus {
+.measure-btn:hover {
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+  transform: translateY(-2px);
+}
+
+.measure-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+}
+
+.measure-btn:focus {
   outline: 2px solid #2563eb;
   outline-offset: 2px;
 }
 
-.demo-btn {
-  background-color: transparent;
-  color: #3b82f6;
-  border: 2px solid #3b82f6;
-}
-
-.demo-btn::before {
-  background-color: #3b82f6;
-}
-
-.demo-btn:hover {
-  color: white;
+.measure-btn:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Loading spinner */
@@ -390,6 +474,11 @@ body {
   .instructions-container {
     padding: 40px 30px;
   }
+  
+  .step-icon {
+    width: 70px;
+    height: 70px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -409,9 +498,16 @@ body {
     font-size: 13px;
   }
   
-  .button-group {
-    flex-direction: column;
+  .measure-btn {
+    width: 100%;
+    padding: 14px 20px;
   }
+}
+
+/* Enhanced accessibility focus states */
+button:focus, [role="button"]:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
 }
 
 /* Dark Mode Support */
@@ -426,7 +522,11 @@ body {
   }
   
   .main-title {
-    color: #f7fafc;
+    background: linear-gradient(90deg, #60a5fa, #93c5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
   }
   
   .sub-heading {
@@ -465,7 +565,7 @@ body {
     border-top: 1px dashed #4a5568;
   }
   
-  .progress-dot {
-    background-color: #4a5568;
+  .steps-container::before {
+    background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.3), transparent);
   }
 }
