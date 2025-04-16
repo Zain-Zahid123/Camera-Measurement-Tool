@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Instruction.css";
 
 // SVG icons as components
@@ -75,6 +76,7 @@ function Instructions() {
   const [activeTooltip, setActiveTooltip] = useState(null);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Initialize animation observer
@@ -115,9 +117,10 @@ function Instructions() {
 
   // Handle measuring process
   const handleStartMeasuring = () => {
+    // Existing loading state code
     setLoading(true);
     
-    // Simulate upload progress
+    // Progress simulation code 
     const progressInterval = setInterval(() => {
       setUploadProgress(prev => {
         if (prev >= 100) {
@@ -128,13 +131,12 @@ function Instructions() {
       });
     }, 200);
     
-    // Simulate processing, replace with actual functionality
+    // Timeout ke andar navigate call karein
     setTimeout(() => {
       clearInterval(progressInterval);
       setLoading(false);
       setUploadProgress(0);
-      // You could navigate to another page or show a success message here
-      alert("Please wait while we take you to the next page…");
+      navigate("/select-method");  // Ye line add karein
     }, 2500);
   };
 
