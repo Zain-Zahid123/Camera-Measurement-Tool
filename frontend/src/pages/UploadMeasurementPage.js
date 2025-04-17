@@ -113,14 +113,22 @@ function UploadMeasurementPage() {
       });
     }, 100);
     
-    // Simulate processing, then navigate to next step
-    setTimeout(() => {
-      clearInterval(progressInterval);
-      setLoading(false);
-      setUploadProgress(0);
-      navigate("/results"); // For now, go directly to results page
-    }, 3000);
-  };
+     // Simulate processing, then navigate to next step
+  setTimeout(() => {
+    clearInterval(progressInterval);
+    setLoading(false);
+    setUploadProgress(0);
+    
+    // After processing completes
+    navigate("/results", {
+      state: {
+        measurements: { width: 150, height: 100 }, // You should replace with actual measurements
+        method: "upload",
+        timestamp: new Date().toISOString()
+      }
+    });
+  }, 3000);
+};
 
   // Trigger file input click
   const onButtonClick = () => {
@@ -177,7 +185,7 @@ function UploadMeasurementPage() {
                 <path d="M12 3V15" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '10px', color: '#1e293b' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '10px', color: 'white' }}>
               Drag & Drop your fabric image here
             </h2>
             <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '20px' }}>

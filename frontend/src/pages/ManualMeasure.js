@@ -135,12 +135,18 @@ function ManualMeasurementPage() {
     setLoading(true);
     
     // Simulate processing
-    setTimeout(() => {
-      setLoading(false);
-      // In a real app, you'd save the measurement data here
-      navigate("/results");
+  setTimeout(() => {
+    setLoading(false);
+    // After processing completes
+    navigate("/results", {
+      state: {
+        measurements: { width: parseFloat(width), height: parseFloat(height) },
+        method: "manual",
+        timestamp: new Date().toISOString()
+      }
+    });
     }, 1500);
-  };
+    };
 
   // Common input style for form elements
   const inputStyle = {
