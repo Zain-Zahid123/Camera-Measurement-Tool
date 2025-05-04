@@ -195,7 +195,7 @@ body {
 .step-card.highlight .step-title,
 .step-card.highlight .step-description,
 .step-card.highlight .expanded-content {
-  color: white;
+  color: rgb(224, 227, 234);
 }
 
 .step-card.highlight .step-icon {
